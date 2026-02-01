@@ -1,0 +1,58 @@
+package edu.narxoz.galactic.task;
+
+public class DesliveryTask{
+    private CelestialBody origin;
+    private CelestialBody destination;
+    private Cargo cargo;
+    private TaskState state;
+    private Drone assignedDrone;
+
+    public DesliveryTask(CelestialBody origin, CelestialBody destination, Cargo cargo){
+        this.origin = origin;
+        this.destination = destination;
+        this.cargo = cargo;
+        this.state = TaskState.CREATED;
+        this.assignedDrone = null;
+    }
+
+    public CelestialBody getOrigin() {
+        return origin;
+    }
+
+    public CelestialBody getDestination() {
+        return destination;
+    }
+
+    public Cargo getCargo() {
+        return cargo;
+    }
+
+    public TaskState getState() {
+        return state;
+    }
+
+    public Drone getAssignedDrone() {
+        return assignedDrone;
+    }
+
+    public double estimateTime(){
+        if(assignedDrone = null){
+            throw new IllegalStateException("Drone must be assigned");
+        }
+        if(assignedDrone.speedKmPerMin() <= 0){
+            throw new IllegalStateException("Drone speed is under or equal to 0");
+        }
+        origin.distanceTo(destination) / assignedDrone.speedKmPerMin();
+
+    }
+
+    void setState(TaskState state){
+        this.state = state;
+    }
+     
+    void setAssignedDrone(Drone drone) {
+        this.assignedDrone = drone;
+    }
+}
+
+
