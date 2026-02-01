@@ -7,7 +7,7 @@ public class Cargo{
 
     public Cargo(double weightKg, String description){
         if (weightKg <= 0){
-            throw new IllegalArgumentException(weight must be above 0);
+            throw new IllegalArgumentException("weight must be above 0");
         }
         this.weightKg = weightKg;
         this.description = description;

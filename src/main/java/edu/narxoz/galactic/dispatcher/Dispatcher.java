@@ -1,47 +1,58 @@
 package edu.narxoz.galactic.dispatcher;
 
-public Result assignTask(DesliveryTask task, Drone drone){
-    if(task == null || drone == null){
-        return Result(false, "Task or Drone is null");
-    }
-    
-    if (drone.getStatus() != DroneStatus.IDLE) {
-        return new Result(false, "Drone is not IDLE");
-    }
+import edu.narxoz.galactic.drones.Drone;
+import edu.narxoz.galactic.drones.DroneStatus;
+import edu.narxoz.galactic.task.DeliveryTask;
+import edu.narxoz.galactic.task.TaskState;
 
-    if (task.getState() != TaskState.CREATED) {
-        return new Result(false, "Task is not in CREATED state");
-    }
+public class Dispatcher {
 
-    if (task.getCargo().getWeightKg() > drone.getMaxPayloadKg()) {
-         return new Result(false, "Cargo overweight for this drone");
-    }
+    public Result assignTask(DeliveryTask task, Drone drone) {
+        if (task == null || drone == null) {
+            return new Result(false, "Task or drone is null");
+        }
 
-    task.setAssignedDrone(drone);
-    task.setState(TaskState.ASSIGNED);
-    drone.setStatus(DroneStatus.IN_FLIGHT);
-    return new Result(true, "");
-}   
+        if (drone.getStatus() != DroneStatus.IDLE) {
+            return new Result(false, "Drone is not IDLE");
+        }
 
-public Result completeTask(DeliveryTask task){
-    if (task == null) {
-        return new Result(false, "Task is null");
-    }
+        if (task.getState() != TaskState.CREATED) {
+            return new Result(false, "Task is not in CREATED state");
+        }
 
-    if (task.getState() != TaskState.ASSIGNED) {
-        return new Result(false, "Task is not ASSIGNED");
-    }
+        if (task.getCargo().getWeightKg() > drone.getMaxPayloadKg()) {
+            return new Result(false, "Cargo overweight for this drone");
+        }
 
-    if (task.getAssignedDrone() == null) {
-        return new Result(false, "Assigned drone is null");
+        // success
+        task.setAssignedDrone(drone);
+        task.setState(TaskState.ASSIGNED);
+        drone.setStatus(DroneStatus.IN_FLIGHT);
+
+        return new Result(true, "");
     }
 
-    if (task.getAssignedDrone().getStatus() != DroneStatus.IN_FLIGHT) {
-        return new Result(false, "Drone is not IN_FLIGHT");
+    public Result completeTask(DeliveryTask task) {
+        if (task == null) {
+            return new Result(false, "Task is null");
+        }
+
+        if (task.getState() != TaskState.ASSIGNED) {
+            return new Result(false, "Task is not ASSIGNED");
+        }
+
+        if (task.getAssignedDrone() == null) {
+            return new Result(false, "Assigned drone is null");
+        }
+
+        if (task.getAssignedDrone().getStatus() != DroneStatus.IN_FLIGHT) {
+            return new Result(false, "Drone is not IN_FLIGHT");
+        }
+
+        // success
+        task.setState(TaskState.DONE);
+        task.getAssignedDrone().setStatus(DroneStatus.IDLE);
+
+        return new Result(true, "");
     }
-
-    task.setState(TaskState.DONE);
-    task.getAssignedDrone().setStatus(DroneStatus.IDLE);
-
-    return new Result(true, "");
 }

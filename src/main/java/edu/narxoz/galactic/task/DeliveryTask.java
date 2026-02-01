@@ -1,6 +1,10 @@
 package edu.narxoz.galactic.task;
 
-public class DesliveryTask{
+import edu.narxoz.galactic.bodies.CelestialBody;
+import edu.narxoz.galactic.cargo.Cargo;
+import edu.narxoz.galactic.drones.Drone;
+
+public class DeliveryTask {
     private CelestialBody origin;
     private CelestialBody destination;
     private Cargo cargo;
